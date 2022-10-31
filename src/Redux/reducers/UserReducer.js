@@ -4,7 +4,6 @@ const inititalState = {
 };
 // reducer
 const addUser = (state = inititalState, action) => {
-    console.log(action);
     switch (action.type) {
         //add user
         case "ADD_USER":

@@ -45,3 +45,23 @@
   margin-left: calc(50% - 22px);
   margin-top: 10%;
 }
+
+
+
+/*  */
+.listingHome{
+  display: flex;
+}
+.leftMenu{
+  width: 25%;
+}
+.grid{
+  width: 75%;
+}
+.listingAccount{
+  display: flex;
+  align-items: center;
+}
+.sellerName{
+  width: 20%;
+}
