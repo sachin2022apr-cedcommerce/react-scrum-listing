@@ -7,7 +7,7 @@ import { getUser } from '../../Redux/actions';
 import useFetch from '../../customHook/useFetch';
 
 function Home({ userLogin }) {
-    var { result, extractDataFromApi } = useFetch();
+    var { extractDataFromApi } = useFetch();
 
     // states for username and password
     var [name, setName] = useState("")

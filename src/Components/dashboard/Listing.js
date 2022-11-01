@@ -17,7 +17,6 @@ import React from 'react'
 
 function Listing() {
     return (
-
         <Frame>
             <Navigation location="/">
                 <Navigation.Section
