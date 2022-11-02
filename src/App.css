@@ -25,29 +25,6 @@
   margin: 0;
 
 }
-.headOperation{
-  width: 100%;
-  display: flex;
-  padding: 20px 15px;
-  background-color: white;
-  justify-content: space-between;
-  border-radius: 0.5rem;
- box-shadow:  0 0 0.3125rem rgba(23, 24, 24, 0.05), 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.15);
-  margin: 1% 0 3%;
-} 
-
-.dataGrid {
-  font-weight: 550;
-  font-size: 22px;
-  margin: 1% 0 2%;
-}
-.spin {
-  margin-left: calc(50% - 22px);
-  margin-top: 10%;
-}
-
-
-
 /*  */
 .listingHome{
   display: flex;
@@ -57,7 +34,7 @@
   width: 100px;
 }
 .grid{
-  width: 78%;
+  width: 79%;
 }
 .listingAccount{
   display: flex;
@@ -66,3 +43,14 @@
 .sellerName{
   width: 20%;
 }
+.errorBadge .Polaris-Badge{
+  background-color: #f87670;
+}
+.NotListedBadge .Polaris-Badge{
+  background-color: #d9f8ea;
+}
+
+/* 
+Inactive 
+Incomplete 
+Active */

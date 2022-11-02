@@ -62,7 +62,7 @@ function Dashboard({ userLogout, userData }) {
             id: 'Not Listed',
             content: (
                 <span>
-                    Not Listed <Badge status="new">4</Badge>
+                    Not Listed <span className='NotListedBadge'><Badge status="new">4</Badge></span>
                 </span>
             ),
         },
@@ -94,7 +94,7 @@ function Dashboard({ userLogout, userData }) {
             id: 'Error',
             content: (
                 <span>
-                    Error <Badge status="new">4</Badge>
+                    Error <span className='errorBadge'><Badge status="success">4</Badge></span>
                 </span>
             ),
         },
@@ -128,7 +128,7 @@ function Dashboard({ userLogout, userData }) {
                                 />
                             </div>
                         </div>
-                        <div style={{ margin: "30px 5px" }} >
+                        <div style={{ margin: "30px 2px" }} >
                             <Card>
                                 <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
                                     <Card.Section>
