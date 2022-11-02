@@ -152,7 +152,7 @@ export default function TabOptions() {
           <Badge status="new">Not Listed</Badge></span>;
           console.log(Object.keys(children[idx]).includes("error"))
           if(Object.keys(children[idx]).includes("error")){
-            childAmazonStatus = "error";
+            childAmazonStatus = <span className='errorBadge'><Badge status="success">Error</Badge></span>
           }else if(Object.keys(children[idx]).includes("status")){
 
             if(children[idx].status.includes('Not Listed'))
@@ -160,9 +160,11 @@ export default function TabOptions() {
               <Badge status="new">Not Listed{children[idx].status}</Badge></span>
 
             if(children[idx].status.includes('Inactive')){
-              console.log("inactive");
               childAmazonStatus  = <Badge status="critical">
                 {children[idx].status}</Badge>
+            }
+            if(children[idx].status.includes('Incomplete')){
+              childAmazonStatus  = <Badge status="warning">{children[idx].status}</Badge>
             }
 
           }

@@ -44,7 +44,7 @@
   width: 20%;
 }
 .errorBadge .Polaris-Badge{
-  background-color: #f87670;
+  background-color: rgb(255, 94, 94);
 }
 .NotListedBadge .Polaris-Badge{
   background-color: #d9f8ea;
