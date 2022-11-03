@@ -1,4 +1,4 @@
-import { Badge, Card, Frame, Heading, Page, Select, Tabs, TextStyle, TopBar } from '@shopify/polaris';
+import { Badge, Card, Columns, Frame, Heading, Page, Select, Tabs, TextStyle, TopBar } from '@shopify/polaris';
 import React, { useCallback, useState } from 'react'
 import { ArrowLeftMinor } from '@shopify/polaris-icons';
 import { connect } from 'react-redux';
@@ -106,41 +106,37 @@ function Dashboard({ userLogout, userData }) {
             <div className='dashboard' style={{ height: '60px' }}>
                 <Frame topBar={topBarMarkup} />
             </div>
-            <div className='listingHome'>
-                <div className='leftMenu'>
-                    <Listing />
-                </div>
-                <div className='grid'>
-                    <Page>
-                        <div className='listingAccount'>
-                            <div>
-                                <Heading>Listings</Heading>
-                                <TextStyle variation="subdued">
-                                    You can manage your Shopify products here, which are enabled for Amazon by CedCommerce Sales Channel in your Shopify store.
-                                </TextStyle>
-                            </div>
-                            <div className='sellerName'>
-                                <Select
-                                    label="Seller Account"
-                                    options={
-                                        [{ label: userDetails?.name }]
-                                    }
-                                />
-                            </div>
+            <Columns columns={{ xs: '2fr 10fr ' }}>
+                <Listing />
+                <Card sectioned>
+                    <div className='listingAccount'>
+                        <div>
+                            <Heading>Listings</Heading>
+                            <TextStyle variation="subdued">
+                                You can manage your Shopify products here, which are enabled for Amazon by CedCommerce Sales Channel in your Shopify store.
+                            </TextStyle>
                         </div>
-                        <div style={{ margin: "30px 2px" }} >
-                            <Card>
-                                <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
-                                    <Card.Section>
-                                        <p>Tab {selected} selected</p>
-                                    </Card.Section>
-                                </Tabs>
-                                <TabOptions/>
-                            </Card>
+                        <div className='sellerName'>
+                            <Select
+                                label="Seller Account"
+                                options={
+                                    [{ label: userDetails?.name }]
+                                }
+                            />
                         </div>
-                    </Page>
-                </div>
-            </div>
+                    </div>
+                    <div style={{ margin: "30px 2px" }} >
+                        <>
+                            <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
+                                <Card.Section>
+                                    <p>Tab {selected} selected</p>
+                                </Card.Section>
+                            </Tabs>
+                            <TabOptions />
+                        </>
+                    </div>
+                </Card>
+            </Columns>
         </>
     )
 }

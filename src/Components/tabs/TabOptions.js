@@ -1,8 +1,14 @@
-import { Badge, Heading } from '@shopify/polaris';
+import { Badge, Button, ButtonGroup, Heading } from '@shopify/polaris';
 import { Image, Space, Table, Tabs, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import {
+  ClockMajor
+} from '@shopify/polaris-icons';
+import ModalInProgress from '../modal/ModalInProgress';
 // import tabcss from './TabOptions.module.css'
 const { Title, Text } = Typography;
+let count123 = 0;
+let ttt = []
 const columns = [
   {
     title: <Text strong>Image</Text>,
@@ -11,8 +17,6 @@ const columns = [
   {
     title: <Text strong>Name</Text>,
     dataIndex: 'title',
-    
-    // sorter: (a, b) => a.age - b.age,
   },
   {
     title: <Heading>Product Details</Heading>,
@@ -29,6 +33,14 @@ const columns = [
   {
     title: <Heading>Amazon Status</Heading>,
     dataIndex: 'amazonStatus'
+  },
+  {
+    title: <Heading>Activity</Heading>,
+    dataIndex: 'activity'
+  },
+  {
+    title: <Heading>Action</Heading>,
+    dataIndex: 'action'
   }
 ];
 const childTableColumns = [
@@ -54,15 +66,24 @@ const childTableColumns = [
     title: <Heading>Amazon Status</Heading>,
     dataIndex: 'amazonStatus'
   },
-
+  {
+    title: <Heading>Activity</Heading>,
+    dataIndex: 'activity'
+  }
 ]
 export default function TabOptions() {
+  const [activeProgressModal, setActiveProgressModal] = useState(false);
+  const [modalProp, setModalProp] = useState([])
   // const [showTitle, setShowTitle] = useState(false);
   const [yScroll, setYScroll] = useState(false);
   const [xScroll, setXScroll] = useState(undefined);
   const [tableLayout, setTableLayout] = useState(undefined);
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([]);
+
+  const handleChange = useCallback(() => {
+    setActiveProgressModal(!activeProgressModal)
+  },[activeProgressModal]);
 
   const scroll = {};
   if (yScroll) {
@@ -83,14 +104,10 @@ export default function TabOptions() {
     rowSelection: true,
     tableLayout,
   };
-  // /filter[cif_amazon_multi_inactive][1]=Not Listed
-  // https://multi-account.sellernext.com/home/public/connector/product/getStatusWiseCount
-  // fetch(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?count=65&filter[cif_amazon_multi_inactive][1]=Not Listed`, {
-  // https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?count=50&filter[cif_amazon_multi_activity][1]=error
+
   useEffect(() => {
     setLoading(true)
-    // fetch(`https://multi-account.sellernext.com/home/public/connector/product/getStatusWiseCount?&target_marketplace=eyJtYXJrZXRwbGFjZSI6ImFsbCIsInNob3BfaWQiOm51bGx9`,{
-    fetch(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?count=80&productOnly=true`, {
+    fetch(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?count=90&productOnly=true`, {
       method: 'GET',
       Payload: {
         "source": {
@@ -102,147 +119,233 @@ export default function TabOptions() {
           "shopId": "509"
         },
         "count": 1,
-        // next:`eyJjdXJzb3IiOnsiJG9pZCI6IjYzNWY3NGRhMjQwMmM3YTcxMjdmYTc5ZCJ9LCJwb2ludGVyIjpbeyIkb2lkIjoiNjM1Zjc0ZDQyNDAyYzdhNzEyN2Y5ZWI1In1dLCJ0b3RhbFBhZ2VSZWFkIjoyfQ==`,
-        // productOnly: true
       },
 
       headers: {
-        "Ced-Source-Id": 500,
+        "Ced-Source-Id": 476,
         "Ced-Source-Name": "shopify",
-        "Ced-Target-Id": 640,
+        "Ced-Target-Id": 479,
         "Ced-Target-Name": "amazon",
-        // Connection: "keep-alive",
         appCode:
-      "eyJzaG9waWZ5IjoiYW1hem9uX3NhbGVzX2NoYW5uZWwiLCJhbWF6b24iOiJhbWF6b24ifQ==",
-      appTag: "amazon_sales_channel",
-      Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjMzMjlkN2YwNDUxYzA3NGFhMGUxNWE4Iiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNjk4NzMxOTc2LCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJ0b2tlbl9pZCI6IjYzNWY2NDQ4YzQxY2M2MjdhMzBjNmIyMiJ9.o0XvqNpmiAaXQgWC8LgaBrhx6Kjc6rwm0vi-aG-ezZHp3Ph1jcaBqKQq1u9PQSwiCjU6US8xiqMbN_l5JYEwmPOWWQF43Fdt8V2i_dYp2L4mj51rKn9pH7xCloNPAiqCAp7IlfdwXU2NL5cYlb8p4Ve9axRKuPaZ6FpEL49fP8zjlT5gsfR7lr5UD_iKmBH-F-R4ORgQC3vR0CfsW42XXebfTiKf5fh2qBAIrjtSPJyO0jgNxLCTppnT3ruBf3yDL7EcAOFXzUZn_G8NsOSaZp5AvMWIMDkpmBO0VvgkIqSuYOlICki6riprysfwhuwU1XAtpNwI6N571dfUTPhXsw"
+          "eyJzaG9waWZ5IjoiYW1hem9uX3NhbGVzX2NoYW5uZWwiLCJhbWF6b24iOiJhbWF6b24ifQ==",
+        appTag: "amazon_sales_channel",
+        Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjMzMjk2ZDYwZDVlMzE3NjI3NThiMmY5Iiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNjk4OTA3Mzc0LCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJ0b2tlbl9pZCI6IjYzNjIxMTZlNTdiNGE3NjNlYzM5YWY5MiJ9.FXwul26U6GG2d9Wrfh5lNu-ikW_vwZ0tbBdjmoVTWhF3tOibyff7buM3tuIcgOkti9UvBpKtTo-SRU8A5UNEah37q1K1k-GQOSdwYxO1Q4Z9oF5AkIk8whl_-gZymjUqlMO0fjKJie6a_A4vxYk-PF8DEUHHOsc0MHeQA7TuaHR95fbV281SVXcmEP17_snN-eNsdOoP70vqiER3BkLV7Nr78JoSNZ38iqqznHEDKkLAgr2p3qI4OKZ7S6SiQglh1YfZgt4oZho868e8RAuV9QSomVpuuXAmyBHDGbUPrLTqvhj_CnzvQzEiNDnu__oh9UbWkTdZdAZhY_S5uzBMYg"
       }
     })
-    .then((res) => res.json())
-    .then((result) => {
-    console.log(result);
-    console.log(result.data.rows);
-    setLoading(false)
-    var tableData = [];
-    var products = result.data.rows;
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+        console.log(result.data.rows);
+        setLoading(false)
+        var tableData = [];
+        var products = result.data.rows;
 
-    for (var index = 0; index < products.length; index++) {
-      var productClild = []
-      var ProductDetails = <></>
-      var parentAmazonStatus = <span className='NotListedBadge'><Badge status="new">Not Listed</Badge></span>
-      var children = products[index].items;
-      var Quantity = 0;
-      var ChildCount = 0;
-      if (products[index].type === "variation") {
-        for (var idx = 1; idx < children.length; idx++) {
-          var PDetails = (<span>
-            <Text strong>Price:</Text>
-            <Text type="secondary"> {children[idx].price}</Text>
-            <br />
-            <Text strong>Barcode:</Text>
-            <Text type="secondary">{(children[idx].barcode === "") ?
-              <>N/A</> : <>{children[idx].barcode}</>}</Text><br />
-            <Text strong>SKU:</Text>
-            <Text type="secondary">{children[idx].sku}</Text><br />
-            <Text strong>ASIN:</Text>
-            <Text type="secondary">{(children[idx].asin === undefined) ? <>N/A</> : <>{children[idx].asin}</>}</Text>
-          </span>)
+        for (var index = 0; index < products.length; index++) {
+          var productClild = []
+          var ProductDetails = <></>
+          var parentAmazonStatus = <></>
+          var children = products[index].items;
+          var Quantity = 0;
+          var ChildCount = 0;
+          var ActivityStatus = "--"
+          var parentActivity = "--";
+          parentAmazonStatus = <span className='NotListedBadge'>
+            <Badge status="new">Not Listed</Badge>
+          </span>
+          if (products[index].type === "variation") {
 
-          var childAmazonStatus = <span className='NotListedBadge'>
-          <Badge status="new">Not Listed</Badge></span>;
-          console.log(Object.keys(children[idx]).includes("error"))
-          if(Object.keys(children[idx]).includes("error")){
-            childAmazonStatus = <span className='errorBadge'><Badge status="success">Error</Badge></span>
-          }else if(Object.keys(children[idx]).includes("status")){
-
-            if(children[idx].status.includes('Not Listed'))
-            childAmazonStatus = <span className='NotListedBadge'>
-              <Badge status="new">Not Listed{children[idx].status}</Badge></span>
-
-            if(children[idx].status.includes('Inactive')){
-              childAmazonStatus  = <Badge status="critical">
-                {children[idx].status}</Badge>
+            if (children.every((item) => item.status === undefined)) {
+              parentAmazonStatus = <span className='NotListedBadge'>
+                <Badge status="new">Not Listed</Badge>
+              </span>
             }
-            if(children[idx].status.includes('Incomplete')){
-              childAmazonStatus  = <Badge status="warning">{children[idx].status}</Badge>
+            else if (children.some((item) => item.status?.startsWith('Not Listed'))) {
+              parentAmazonStatus = <span className='NotListedBadge'>
+                <Badge status="new">Not Listed</Badge>
+              </span>
+            } else if (children.some((item) => item.status?.startsWith('Active'))) {
+              parentAmazonStatus = <span className='badge'><Badge status="success">Active</Badge></span>
+            }
+            else if (children.some((item) => item.status?.startsWith('Inactive'))) {
+              parentAmazonStatus = <span className='badge'><Badge status="critical">Inactive</Badge></span>
+            }
+            else if (children.some((item) => item.status?.includes('Incomplete'))) {
+              parentAmazonStatus = <span className='badge'><Badge status="warning">
+                Incomplete</Badge></span>
             }
 
+
+
+
+            for (var idx = 1; idx < children.length; idx++) {
+              var PDetails = (<span>
+                <Text strong>Price:</Text>
+                <Text type="secondary"> {children[idx].price}</Text>
+                <br />
+                <Text strong>Barcode:</Text>
+                <Text type="secondary">{(children[idx].barcode === "") ?
+                  <>N/A</> : <>{children[idx].barcode}</>}</Text><br />
+                <Text strong>SKU:</Text>
+                <Text type="secondary">{children[idx].sku}</Text><br />
+                <Text strong>ASIN:</Text>
+                <Text type="secondary">{(children[idx].asin === undefined) ? <>N/A</> : <>{children[idx].asin}</>}</Text>
+              </span>)
+
+              var childAmazonStatus = <span className='NotListedBadge'>
+                <Badge status="new">Not Listed</Badge></span>;
+              if (children[idx]["error"] !== undefined) {
+                childAmazonStatus = <span className='errorBadge'><Badge status="success">Error</Badge></span>
+                parentAmazonStatus = <span className='errorBadge'><Badge status="success">Error</Badge></span>
+              } else if (children[idx]["status"] !== undefined) {
+                if (children[idx].status.includes('Not Listed'))
+                  childAmazonStatus = <span className='NotListedBadge'>
+                    <Badge status="new">{children[idx].status}</Badge></span>
+
+                if (children[idx].status.includes('Inactive')) {
+                  childAmazonStatus = <Badge status="critical">
+                    {children[idx].status}</Badge>
+                }
+                if (children[idx].status.includes('Incomplete')) {
+                  childAmazonStatus = <Badge status="warning">{children[idx].status}</Badge>
+                }
+                if (children[idx].status.includes('Active')) {
+                  childAmazonStatus = <Badge status="success">
+                    {children[idx].status}
+                  </Badge>
+                }
+              }
+              
+              if(children[idx]['process_tags'] !== undefined){
+                ActivityStatus = <Button icon={ClockMajor} onClick={() => {
+                  setModalProp("Sachin")
+                  setActiveProgressModal(!activeProgressModal)
+                }}  
+                plain monochrome> In Progress</Button>
+              }
+
+              productClild.push({
+                key: `${index}${idx}`,
+                image: (<Image width={80} src={`${children[idx].main_image}`}
+                  alt={children[idx].title} />),
+                title: children[idx].title,
+                ProductDetails: PDetails,
+                inventory: children[idx].quantity,
+                activity: ActivityStatus,
+                amazonStatus: childAmazonStatus,
+              })
+              Quantity += children[idx].quantity;
+              ChildCount += 1;
+            }
+          } else {
+            
+            ProductDetails = <span>
+              <Text strong>Price:</Text>
+              <Text type="secondary"> {children[0].price}</Text><br />
+              <Text strong>Barcode:</Text>
+              <Text type="secondary"> {(children[0].barcode === "") ?
+                <>N/A</> : <>{children[0].barcode}</>}</Text>
+            </span>
+            Quantity = children[0].quantity;
+
+
+            parentAmazonStatus = <span className='NotListedBadge'>
+              <Badge status="new">Not Listed</Badge>
+            </span>
+            if (children[0]['error'] !== undefined) {
+              parentAmazonStatus = <span className='errorBadge'><Badge status="success">Error</Badge></span>
+            }
+            else if (children[0]['status'] !== undefined && parentAmazonStatus !== 'error') {
+              if (children[0].status.includes('Not Listed'))
+                parentAmazonStatus = <span className='NotListedBadge'>
+                  <Badge status="new">{children[0].status}</Badge></span>
+
+              if (children[0].status.includes('Inactive')) {
+                parentAmazonStatus = <span className='badge'><Badge status="critical">
+                  {children[0].status}</Badge></span>
+              }
+              if (children[0].status.includes('Incomplete')) {
+                parentAmazonStatus = <span className='badge'><Badge status="warning">
+                  {children[0].status}</Badge></span>
+              }
+              if (children[0].status.includes('Active')) {
+                parentAmazonStatus = <span className='badge'><Badge status="success">
+                  {children[0].status}
+                </Badge></span>
+              }
+            }
           }
-          // console.log(childAmazonStatus);
-          productClild.push({
-            key: `${index}${idx}`,
-            image: (<Image width={80} src={`${children[idx].main_image}`}
-              alt={children[idx].title} />),
-            title: children[idx].title,
-            ProductDetails: PDetails,
-            inventory: children[idx].quantity,
-            amazonStatus:childAmazonStatus,
+
+          var parentDetails = <>
+            <Text strong>SKU:</Text>
+            <Text type="secondary">{products[index].container_id}</Text><br />
+            <Text strong>ASIN:</Text>
+            <Text type="secondary">{(products[index].asin === undefined) ? <>N/A</> : <>{products[index].asin}</>}</Text>
+          </>
+          var template = "N/A";
+          if (products[index].profile !== undefined)
+            template = (products[index].profile.profile_name)
+
+          var inventoryString = ""
+          if (ChildCount === 0) {
+            inventoryString = `${Quantity} in stock`
+          } else inventoryString = `${Quantity} in stock for ${ChildCount} variant`
+          // ttt = children[0].process_tags[0].toString()
+          if(children[0]?.process_tags){    
+            console.log(children[0].process_tags);
+            var  processTag = children[0].process_tags
+            if(children[0].process_tags[0].includes("in progress")){
+              parentActivity = <Button 
+              icon={ClockMajor} 
+              onClick={() => {
+                  setModalProp([...processTag]);
+                  setActiveProgressModal(!activeProgressModal)
+                }}  
+              plain monochrome> In Progress</Button>
+            }
+          }
+
+          tableData.push({
+            key: index,
+            image: (<Image width={80} src={`${products[index].main_image}`} alt={products[index].title} />),
+            title: products[index].title,
+            ProductDetails: (<>{ProductDetails}<br />{parentDetails}</>),
+            description: [...productClild],
+            template: template,
+            inventory: inventoryString,
+            amazonStatus: parentAmazonStatus,
+            activity: parentActivity,
+            action: parentAmazonStatus.props.children.props.children
           })
-          Quantity += children[idx].quantity;
-          ChildCount += 1;
         }
-      } else {
-        ProductDetails = <span>
-          <Text strong>Price:</Text>
-          <Text type="secondary"> {children[0].price}</Text><br />
-          <Text strong>Barcode:</Text>
-          <Text type="secondary"> {(children[0].barcode === "") ?
-            <>N/A</> : <>{children[0].barcode}</>}</Text>
-        </span>
-        Quantity = children[0].quantity;
-      }
-
-      var parentDetails = <>
-        <Text strong>SKU:</Text>
-        <Text type="secondary">{products[index].container_id}</Text><br />
-        <Text strong>ASIN:</Text>
-        <Text type="secondary">{(products[index].asin === undefined) ? <>N/A</> : <>{products[index].asin}</>}</Text>
-      </>
-      var template = "N/A";
-      if (products[index].profile !== undefined)
-        template = (products[index].profile.profile_name)
-
-      var inventoryString = ""
-      if (ChildCount === 0) {
-        inventoryString = `${Quantity} in stock`
-      } else inventoryString = `${Quantity} in stock for ${ChildCount} variant`
-      tableData.push({
-        key: index,
-        image: (<Image width={80} src={`${products[index].main_image}`} alt={products[index].title} />),
-        title: products[index].title,
-        ProductDetails: (<>{ProductDetails}<br />{parentDetails}</>),
-        description: [...productClild],
-        template: template,
-        inventory: inventoryString,
-        amazonStatus: parentAmazonStatus
+        setData([...tableData]);
       })
-    }
-    setData([...tableData]);
-  })
 
   }, [])
-console.log(data);
-return (
-  <>
-    <Table
-      {...tableProps}
-      bordered
-      pagination={false}
-      columns={tableColumns}
-      dataSource={data}
-      scroll={scroll}
-      loading={loading}
-      expandable={{
-        expandedRowRender: record => <>
-          <Table {...tableProps}
-            bordered
-            pagination={false}
-            columns={childTableColumns} dataSource={record.description}
-          />
-        </>,
-        rowExpandable: record => record.description.length !== 0,
-      }}
-    />
-  </>
-)
+  console.log(data);
+  return (
+    <>
+      <Table
+        {...tableProps}
+        bordered
+        pagination={false}
+        columns={tableColumns}
+        dataSource={data}
+        scroll={scroll}
+        loading={loading}
+        expandable={{
+          expandedRowRender: record => <>
+            <Table {...tableProps}
+              bordered
+              pagination={false}
+              columns={childTableColumns} dataSource={record.description}
+            />
+          </>,
+          rowExpandable: record => record.description.length !== 0,
+        }}
+      />
+      <ModalInProgress activeProgressModal = {activeProgressModal}
+      setActiveProgressModal={setActiveProgressModal} 
+      modalProp={modalProp}/>
+    </>
+  )
 }

@@ -39,6 +39,8 @@
 .listingAccount{
   display: flex;
   align-items: center;
+  gap: 10px;
+  justify-content: space-between;
 }
 .sellerName{
   width: 20%;
@@ -47,10 +49,5 @@
   background-color: rgb(255, 94, 94);
 }
 .NotListedBadge .Polaris-Badge{
-  background-color: #d9f8ea;
+  background-color: #e6fcf2;
 }
-
-/* 
-Inactive 
-Incomplete 
-Active */

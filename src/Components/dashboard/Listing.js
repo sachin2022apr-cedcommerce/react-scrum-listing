@@ -1,4 +1,4 @@
-import { Card, Frame, Navigation } from '@shopify/polaris'
+import { Button, Card, Frame, Navigation } from '@shopify/polaris'
 import {
     HomeMinor,
     OrdersMinor,
