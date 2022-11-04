@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { SearchMinor } from '@shopify/polaris-icons';
-import { ChoiceList, TextField, RangeSlider, Card, ResourceList, Filters, Avatar, TextStyle, Columns, Button, Autocomplete, Icon } from '@shopify/polaris';
+import { ChoiceList, TextField, RangeSlider, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover } from '@shopify/polaris';
 import { useState, useCallback } from 'react';
 
 export default function Filter() {
@@ -8,8 +8,18 @@ export default function Filter() {
     const [moneySpent, setMoneySpent] = useState(null);
     const [taggedWith, setTaggedWith] = useState(null);
     const [queryValue, setQueryValue] = useState(null);
+    const [popoverActive, setPopoverActive] = useState(false);
 
-    const [expanded, setExpanded] = useState(false);
+    const togglePopoverActive = useCallback(
+      () => setPopoverActive((popoverActive) => !popoverActive),
+      [],
+    );
+  
+    const activator = (
+      <Button onClick={togglePopoverActive} disclosure>
+        More actions
+      </Button>
+    );
 
     const handleAccountStatusChange = useCallback(
         (value) => setAccountStatus(value),
@@ -183,9 +193,10 @@ export default function Filter() {
         />
     );
 
+
     return (
         <div style={{ margin: "20px 0" }}>
-            <Columns columns={{ md: '2fr 1fr 1fr 1fr 1fr' }}>
+            <Columns columns={{ md: '2fr 0.5fr 1fr 1fr 1fr' }}>
 
                 <Autocomplete
                     options={options}
@@ -205,14 +216,17 @@ export default function Filter() {
                 />
                 <Button>Sync Status</Button>
                 <Button>Amazon Lookup</Button>
-                <Button
-                    fullWidth
-                    textAlign="left"
-                    disclosure={expanded ? 'up' : 'down'}
-                    onClick={() => setExpanded(!expanded)}
+                <Popover
+                    active={popoverActive}
+                    activator={activator}
+                    autofocusTarget="first-node"
+                    onClose={togglePopoverActive}
                 >
-                    {expanded ? 'Show less' : 'Show more'}
-                </Button>
+                    <ActionList
+                        actionRole="menuitem"
+                        items={[{ content: 'Import' }, { content: 'Export' }]}
+                    />
+                </Popover>
             </Columns>
 
         </div>
