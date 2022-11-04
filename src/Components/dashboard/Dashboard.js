@@ -7,6 +7,7 @@ import { LogoutUser } from '../../Redux/actions';
 import Listing from './Listing';
 import TabOptions from '../tabs/TabOptions';
 import useFetch from '../../customHook/useFetch';
+import Filter from './Filter';
 
 function Dashboard({ userLogout, userData }) {
     var [dataCount, setDataCount] = useState({
@@ -108,13 +109,14 @@ function Dashboard({ userLogout, userData }) {
         })
     }, [])
     return (
-        <>
+        <Frame>
             <div className='dashboard' style={{ height: '60px' }}>
                 <Frame topBar={topBarMarkup} />
             </div>
-            <Columns columns={{ xs: '1fr 10fr ' }} spacing={{ xs: '1' }}>
+            <Columns columns={{   xs: '1fr 5fr',
+          md: '1fr 5fr', }}>
                 <Listing />
-                <Page>
+                <Frame>
                     <div className='listingAccount'>
                         <div>
                             <Heading>Listings</Heading>
@@ -131,16 +133,17 @@ function Dashboard({ userLogout, userData }) {
                             />
                         </div>
                     </div>
-                    <div style={{ margin: "30px 2px" }} >
-                        <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
-                          
-                        </Tabs>
+                    <div style={{ margin: "30px 0px" }} >
+                        <Card sectioned>
+                        <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted></Tabs>
+                        <Filter/>
                         <TabOptions selected={selected}
                             setSelected={setSelected} />
+                        </Card>
                     </div>
-                </Page>
+                </Frame>
             </Columns>
-        </>
+        </Frame>
     )
 }
 const MapStateToProps = (state) => {

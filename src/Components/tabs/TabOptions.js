@@ -288,14 +288,12 @@ export default function TabOptions({selected, setSelected}) {
   console.log(data);
   return (
     <>
-    {<Heading>{selected}</Heading>}
       <Table
         {...tableProps}
         bordered
         pagination={false}
         columns={tableColumns}
         dataSource={data}
-        
         loading={loading}
         expandable={{
           expandedRowRender: record => <>
@@ -307,7 +305,7 @@ export default function TabOptions({selected, setSelected}) {
           </>,
           rowExpandable: record => record.description.length !== 0,
         }}
-        // scroll={{ x: 950 }}
+        scroll={{ x: 900 }}
         />
       <ModalInProgress activeProgressModal = {activeProgressModal}
       setActiveProgressModal={setActiveProgressModal} 

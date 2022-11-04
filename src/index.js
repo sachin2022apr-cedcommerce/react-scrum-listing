@@ -8,12 +8,12 @@ import { AppProvider } from '@shopify/polaris';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './Redux/Store';
-
+import enTranslations from '@shopify/polaris/locales/en.json';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
 
-    <AppProvider>
+    <AppProvider i18n={enTranslations}>
       <BrowserRouter>
         <Provider store={store}>
           <App />
