@@ -19,7 +19,7 @@ export default function ModalInProgress({ activeProgressModal, setActiveProgress
                 // activator={activator}
                 open={activeProgressModal}
                 onClose={handleChange}
-                title="Reach more shoppers with Instagram product tags"
+                title="Actions in progress"
                 primaryAction={{
                     content: 'Refresh to update status',
                     onAction: handleChange,
@@ -43,8 +43,6 @@ export default function ModalInProgress({ activeProgressModal, setActiveProgress
                                     <Heading>{item}</Heading>
                                 </Stack>)
                         })}
-
-
                     </TextContainer>
                 </Modal.Section>
             </Modal>

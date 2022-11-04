@@ -5,10 +5,17 @@ import {
   ClockMajor
 } from '@shopify/polaris-icons';
 import ModalInProgress from '../modal/ModalInProgress';
+import useFetch from '../../customHook/useFetch';
 // import tabcss from './TabOptions.module.css'
-const { Title, Text } = Typography;
-let count123 = 0;
-let ttt = []
+const { Text } = Typography;
+const tabWiseUrl = [
+  "",
+  "&filter[cif_amazon_multi_inactive][1]={Not Listed}",
+  "&filter[items.status][1]=Inactive",
+  "&filter[items.status][1]=Incomplete",
+  "&filter[items.status][1]=Active",
+  "&filter[cif_amazon_multi_activity][1]=error"
+]
 const columns = [
   {
     title: <Text strong>Image</Text>,
@@ -51,7 +58,7 @@ const childTableColumns = [
   {
     title: <Heading>Name</Heading>,
     dataIndex: 'title',
-    // width:"500"
+
     // sorter: (a, b) => a.age - b.age,
   },
   {
@@ -71,12 +78,11 @@ const childTableColumns = [
     dataIndex: 'activity'
   }
 ]
-export default function TabOptions() {
+export default function TabOptions({selected, setSelected}) {
+  var { getListingData } = useFetch()
+
   const [activeProgressModal, setActiveProgressModal] = useState(false);
   const [modalProp, setModalProp] = useState([])
-  // const [showTitle, setShowTitle] = useState(false);
-  const [yScroll, setYScroll] = useState(false);
-  const [xScroll, setXScroll] = useState(undefined);
   const [tableLayout, setTableLayout] = useState(undefined);
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([]);
@@ -85,20 +91,10 @@ export default function TabOptions() {
     setActiveProgressModal(!activeProgressModal)
   },[activeProgressModal]);
 
-  const scroll = {};
-  if (yScroll) {
-    scroll.y = 240;
-  }
-  if (xScroll) {
-    scroll.x = '100vw';
-  }
   const tableColumns = columns.map((item) => ({
     ...item,
   }));
-  if (xScroll === 'fixed') {
-    tableColumns[0].fixed = true;
-    tableColumns[tableColumns.length - 1].fixed = 'right';
-  }
+ 
 
   const tableProps = {
     rowSelection: true,
@@ -107,39 +103,13 @@ export default function TabOptions() {
 
   useEffect(() => {
     setLoading(true)
-    fetch(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?count=90&productOnly=true`, {
-      method: 'GET',
-      Payload: {
-        "source": {
-          "marketplace": "shopify",
-          "shopId": "507"
-        },
-        "target": {
-          "marketplace": "amazon",
-          "shopId": "509"
-        },
-        "count": 1,
-      },
-
-      headers: {
-        "Ced-Source-Id": 476,
-        "Ced-Source-Name": "shopify",
-        "Ced-Target-Id": 479,
-        "Ced-Target-Name": "amazon",
-        appCode:
-          "eyJzaG9waWZ5IjoiYW1hem9uX3NhbGVzX2NoYW5uZWwiLCJhbWF6b24iOiJhbWF6b24ifQ==",
-        appTag: "amazon_sales_channel",
-        Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VyX2lkIjoiNjMzMjk2ZDYwZDVlMzE3NjI3NThiMmY5Iiwicm9sZSI6ImN1c3RvbWVyIiwiZXhwIjoxNjk4OTA3Mzc0LCJpc3MiOiJodHRwczpcL1wvYXBwcy5jZWRjb21tZXJjZS5jb20iLCJ0b2tlbl9pZCI6IjYzNjIxMTZlNTdiNGE3NjNlYzM5YWY5MiJ9.FXwul26U6GG2d9Wrfh5lNu-ikW_vwZ0tbBdjmoVTWhF3tOibyff7buM3tuIcgOkti9UvBpKtTo-SRU8A5UNEah37q1K1k-GQOSdwYxO1Q4Z9oF5AkIk8whl_-gZymjUqlMO0fjKJie6a_A4vxYk-PF8DEUHHOsc0MHeQA7TuaHR95fbV281SVXcmEP17_snN-eNsdOoP70vqiER3BkLV7Nr78JoSNZ38iqqznHEDKkLAgr2p3qI4OKZ7S6SiQglh1YfZgt4oZho868e8RAuV9QSomVpuuXAmyBHDGbUPrLTqvhj_CnzvQzEiNDnu__oh9UbWkTdZdAZhY_S5uzBMYg"
-      }
-    })
-      .then((res) => res.json())
+    getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?${tabWiseUrl[selected]}`)
       .then((result) => {
         console.log(result);
-        console.log(result.data.rows);
+        // console.log(result.data.rows);
         setLoading(false)
         var tableData = [];
         var products = result.data.rows;
-
         for (var index = 0; index < products.length; index++) {
           var productClild = []
           var ProductDetails = <></>
@@ -173,10 +143,6 @@ export default function TabOptions() {
               parentAmazonStatus = <span className='badge'><Badge status="warning">
                 Incomplete</Badge></span>
             }
-
-
-
-
             for (var idx = 1; idx < children.length; idx++) {
               var PDetails = (<span>
                 <Text strong>Price:</Text>
@@ -190,7 +156,6 @@ export default function TabOptions() {
                 <Text strong>ASIN:</Text>
                 <Text type="secondary">{(children[idx].asin === undefined) ? <>N/A</> : <>{children[idx].asin}</>}</Text>
               </span>)
-
               var childAmazonStatus = <span className='NotListedBadge'>
                 <Badge status="new">Not Listed</Badge></span>;
               if (children[idx]["error"] !== undefined) {
@@ -246,7 +211,6 @@ export default function TabOptions() {
                 <>N/A</> : <>{children[0].barcode}</>}</Text>
             </span>
             Quantity = children[0].quantity;
-
 
             parentAmazonStatus = <span className='NotListedBadge'>
               <Badge status="new">Not Listed</Badge>
@@ -320,17 +284,18 @@ export default function TabOptions() {
         setData([...tableData]);
       })
 
-  }, [])
+  }, [selected])
   console.log(data);
   return (
     <>
+    {<Heading>{selected}</Heading>}
       <Table
         {...tableProps}
         bordered
         pagination={false}
         columns={tableColumns}
         dataSource={data}
-        scroll={scroll}
+        
         loading={loading}
         expandable={{
           expandedRowRender: record => <>
@@ -342,7 +307,8 @@ export default function TabOptions() {
           </>,
           rowExpandable: record => record.description.length !== 0,
         }}
-      />
+        // scroll={{ x: 950 }}
+        />
       <ModalInProgress activeProgressModal = {activeProgressModal}
       setActiveProgressModal={setActiveProgressModal} 
       modalProp={modalProp}/>

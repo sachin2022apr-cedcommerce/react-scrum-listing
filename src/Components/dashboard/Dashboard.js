@@ -1,18 +1,23 @@
 import { Badge, Card, Columns, Frame, Heading, Page, Select, Tabs, TextStyle, TopBar } from '@shopify/polaris';
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ArrowLeftMinor } from '@shopify/polaris-icons';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { LogoutUser } from '../../Redux/actions';
 import Listing from './Listing';
 import TabOptions from '../tabs/TabOptions';
+import useFetch from '../../customHook/useFetch';
 
 function Dashboard({ userLogout, userData }) {
-
+    var [dataCount, setDataCount] = useState({
+        NotListed: 0,
+        Inactive: 0,
+        Incomplete: 0,
+        Active: 0
+    })
+    var { getListingData } = useFetch()
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-
     var [userDetails, setUserDetails] = useState(JSON.parse(sessionStorage.getItem('UserLogin')))
-
     console.log(userDetails);
     const toggleIsUserMenuOpen = useCallback(
         () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
@@ -55,60 +60,61 @@ function Dashboard({ userLogout, userData }) {
     );
 
     const tabs = [
-        {
-            content: (<span>All</span>)
-        },
+        { content: (<span>All</span>) },
         {
             id: 'Not Listed',
-            content: (
-                <span>
-                    Not Listed <span className='NotListedBadge'><Badge status="new">4</Badge></span>
-                </span>
-            ),
+            content: (<span className='NotListedBadge'>
+                Not Listed <Badge status="new">{dataCount.NotListed}</Badge>
+            </span>),
         },
         {
             id: 'Inactive',
-            content: (
-                <span>
-                    Inactive <Badge status="critical">4</Badge>
-                </span>
-            ),
+            content: (<span>
+                Inactive <Badge status="critical">{dataCount.Inactive}</Badge>
+            </span>),
         },
         {
             id: 'Incomplete',
-            content: (
-                <span>
-                    Incomplete <Badge status="warning">4</Badge>
-                </span>
-            ),
+            content: (<span>
+                Incomplete <Badge status="warning">{dataCount.Incomplete}
+                </Badge>
+            </span>),
         },
         {
             id: 'Active',
-            content: (
-                <span>
-                    Active <Badge status="success">4</Badge>
-                </span>
-            ),
+            content: (<span>
+                Active <Badge status="success">{dataCount.Active}</Badge>
+            </span>),
         },
         {
             id: 'Error',
-            content: (
-                <span>
-                    Error <span className='errorBadge'><Badge status="success">4</Badge></span>
-                </span>
-            ),
-        },
+            content: (<span className='errorBadge'>
+                Error
+            </span>),
+        }
     ];
-
-
+    useEffect(() => {
+        const url = `https://multi-account.sellernext.com/home/public/connector/product/getStatusWiseCount`;
+        getListingData(url).then((result) => {
+            console.log(result.data)
+            var tempCount = { NotListed: 0, Inactive: 0, Incomplete: 0, Active: 0 }
+            result.data.forEach((item, index) => {
+                if (item._id === "Inactive") tempCount.Inactive = item.total
+                if (item._id === "Active") tempCount.Active = item.total
+                if (item._id === null) tempCount.NotListed = item.total
+                if (item._id === 'Incomplete') tempCount.Incomplete = item.total
+            })
+            setDataCount({ ...tempCount })
+        })
+    }, [])
     return (
         <>
             <div className='dashboard' style={{ height: '60px' }}>
                 <Frame topBar={topBarMarkup} />
             </div>
-            <Columns columns={{ xs: '2fr 10fr ' }}>
+            <Columns columns={{ xs: '1fr 10fr ' }} spacing={{ xs: '1' }}>
                 <Listing />
-                <Card sectioned>
+                <Page>
                     <div className='listingAccount'>
                         <div>
                             <Heading>Listings</Heading>
@@ -126,21 +132,17 @@ function Dashboard({ userLogout, userData }) {
                         </div>
                     </div>
                     <div style={{ margin: "30px 2px" }} >
-                        <>
-                            <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
-                                <Card.Section>
-                                    <p>Tab {selected} selected</p>
-                                </Card.Section>
-                            </Tabs>
-                            <TabOptions />
-                        </>
+                        <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted>
+                          
+                        </Tabs>
+                        <TabOptions selected={selected}
+                            setSelected={setSelected} />
                     </div>
-                </Card>
+                </Page>
             </Columns>
         </>
     )
 }
-
 const MapStateToProps = (state) => {
     return {
         userData: state
@@ -151,5 +153,4 @@ const MapDispatchToProps = (dispatch) => {
         userLogout: () => dispatch(LogoutUser())
     }
 }
-
 export default connect(MapStateToProps, MapDispatchToProps)(Dashboard)

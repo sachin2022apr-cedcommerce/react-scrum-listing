@@ -7,7 +7,7 @@ import { getUser } from '../../Redux/actions';
 import useFetch from '../../customHook/useFetch';
 
 function Home({ userLogin }) {
-    var { extractDataFromApi } = useFetch();
+    var { getUserLogin } = useFetch();
 
     // states for username and password
     var [name, setName] = useState("")
@@ -36,7 +36,7 @@ function Home({ userLogin }) {
         // if username and password is not blank
         if (username !== "" && password !== "" && name !== "") {
             // get user authorized  
-            const fetchResult = extractDataFromApi(`https://fbapi.sellernext.com/user/login?username=${username}&password=${password}`, fetchOperation)
+            const fetchResult = getUserLogin(`https://fbapi.sellernext.com/user/login?username=${username}&password=${password}`, fetchOperation)
             
             fetchResult.then((usersData) => {
                 console.log(usersData);
