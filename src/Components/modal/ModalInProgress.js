@@ -5,18 +5,18 @@ import {
   } from '@shopify/polaris-icons';
 import { useState, useCallback } from 'react';
 
-export default function ModalInProgress({ activeProgressModal, setActiveProgressModal, modalProp }) {
+export default function ModalInProgress({ activeProgressModal, setActiveProgressModal, modalProp, selected, setSelected  }) {
     //   const [activeProgressModal, setActiveProgressModal] = useState(false);
 
     const handleChange = useCallback(() => {
         setActiveProgressModal(!activeProgressModal)
+        setSelected(selected)
     }, [activeProgressModal]);
 
     console.log(modalProp);
     return (
-        <div style={{ height: '100px' }}>
+        <div>
             <Modal
-                // activator={activator}
                 open={activeProgressModal}
                 onClose={handleChange}
                 title="Actions in progress"

@@ -11,7 +11,6 @@ export default function useFetch() {
         },
         "count": 1,
     }
-
     const headers = {
         "Ced-Source-Id": 476,
         "Ced-Source-Name": "shopify",
@@ -36,6 +35,7 @@ export default function useFetch() {
             })
         return await result.json()
     }
+    
     return { getUserLogin, getListingData }
 
 }

@@ -1,9 +1,13 @@
 import React, { useMemo } from 'react'
 import { SearchMinor } from '@shopify/polaris-icons';
-import { ChoiceList, TextField, RangeSlider, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover } from '@shopify/polaris';
+import { ChoiceList, TextField, RangeSlider, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover, Image, Text } from '@shopify/polaris';
 import { useState, useCallback } from 'react';
+import useFetch from '../../customHook/useFetch';
+import Element from 'antd/lib/skeleton/Element';
+import { Card } from 'antd';
 
 export default function Filter() {
+    const {getListingData} = useFetch()
     const [accountStatus, setAccountStatus] = useState(null);
     const [moneySpent, setMoneySpent] = useState(null);
     const [taggedWith, setTaggedWith] = useState(null);
@@ -136,36 +140,36 @@ export default function Filter() {
         });
     }
 
-    const deselectedOptions = useMemo(
-        () => [
-            { value: 'rustic', label: 'Rustic' },
-            { value: 'antique', label: 'Antique' },
-            { value: 'vinyl', label: 'Vinyl' },
-            { value: 'vintage', label: 'Vintage' },
-            { value: 'refurbished', label: 'Refurbished' },
-        ],
-        [],
-    );
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [inputValue, setInputValue] = useState('');
-    const [options, setOptions] = useState(deselectedOptions);
+    const [options, setOptions] = useState([]);
 
     const updateText = useCallback(
         (value) => {
             setInputValue(value);
-
-            if (value === '') {
-                setOptions(deselectedOptions);
-                return;
-            }
-
-            const filterRegex = new RegExp(value, 'i');
-            const resultOptions = deselectedOptions.filter((option) =>
-                option.label.match(filterRegex),
-            );
-            setOptions(resultOptions);
+            var _searchResult = [];
+            getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getSearchSuggestions?query=${value}`).then((result) => {
+                result.data.forEach((item, index) => {
+                    // console.log(item.product_type,item.brand, item.title);
+                    _searchResult.push({
+                        title:value,
+                        value:item.container_id,
+                        label:(<Columns  
+                        columns={{xs: '1fr 4fr'}}>
+                            <Image width={100} src = {item.main_image} />
+                            <Card title={item.title}>
+                                <Text><b>Brand: </b> {item.brand}</Text>
+                                <Text><b>Brand: </b> {item.product_type}</Text>
+                            </Card>
+                        </Columns>)
+                    })
+                })
+                setOptions([..._searchResult])
+            })
+            if(value === "")
+            setOptions([])
         },
-        [deselectedOptions],
+        [],
     );
 
     const updateSelection = useCallback(
@@ -182,7 +186,7 @@ export default function Filter() {
         },
         [options],
     );
-
+    console.log(options);
 
     const textField = (
         <Autocomplete.TextField
@@ -196,7 +200,7 @@ export default function Filter() {
 
     return (
         <div style={{ margin: "20px 0" }}>
-            <Columns columns={{ md: '2fr 0.5fr 1fr 1fr 1fr' }}>
+            <Columns columns={{ md: '2.5fr 0.5fr 1fr 1fr 1fr' }}>
 
                 <Autocomplete
                     options={options}

@@ -95,7 +95,7 @@ function Dashboard({ userLogout, userData }) {
         }
     ];
     useEffect(() => {
-        const url = `https://multi-account.sellernext.com/home/public/connector/product/getStatusWiseCount`;
+        const url = `https://multi-account.sellernext.com/home/public/connector/product/getStatusWiseCount`
         getListingData(url).then((result) => {
             console.log(result.data)
             var tempCount = { NotListed: 0, Inactive: 0, Incomplete: 0, Active: 0 }
@@ -106,6 +106,8 @@ function Dashboard({ userLogout, userData }) {
                 if (item._id === 'Incomplete') tempCount.Incomplete = item.total
             })
             setDataCount({ ...tempCount })
+            /*Incomplete,null,Active,Inactive
+            */
         })
     }, [])
     return (
