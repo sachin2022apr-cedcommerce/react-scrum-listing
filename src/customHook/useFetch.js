@@ -27,11 +27,12 @@ export default function useFetch() {
     }
 
     async function getListingData(url, method = 'GET') {
+        
         const result = await fetch(url,
             {
             method: method,
             Payload: Payload,
-            headers: headers
+            headers: headers,
             })
         return await result.json()
     }

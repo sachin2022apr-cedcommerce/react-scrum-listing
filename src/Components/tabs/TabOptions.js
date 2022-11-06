@@ -1,4 +1,4 @@
-import { Badge, Button, ButtonGroup, Heading } from '@shopify/polaris';
+import { Badge, Button, ButtonGroup, Card, Heading, Pagination, Stack } from '@shopify/polaris';
 import { Image, Space, Table, Tabs, Typography } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import {
@@ -44,6 +44,10 @@ export default function TabOptions({ selected, setSelected }) {
   const [modalProp, setModalProp] = useState([])
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState({
+    next:null,
+    prev:null
+  })
 
   const tableColumns = columns.map((item) => ({
     ...item,
@@ -51,10 +55,14 @@ export default function TabOptions({ selected, setSelected }) {
 
   useEffect(() => {
     setLoading(true)
-    getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?${tabWiseUrl[selected]}`)
+    getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?${tabWiseUrl[selected]}&count=20`)
       .then((result) => {
         console.log(result);
         setLoading(false)
+        setPagination({
+          next:result.data.next,
+          prev:result.data.prev
+        })
         var tableData = [];
         if (result.success === true) {
           var products = result.data.rows;
@@ -127,15 +135,6 @@ export default function TabOptions({ selected, setSelected }) {
                     </Badge>
                   }
                 }
-
-                if (children[idx]['process_tags'] !== undefined) {
-                  ActivityStatus = <Button icon={ClockMajor} onClick={() => {
-                    setModalProp("Sachin")
-                    setActiveProgressModal(!activeProgressModal)
-                  }}
-                    plain monochrome> In Progress</Button>
-                }
-
                 productClild.push({
                   key: `${index}${idx}`,
                   image: (<Image width={80} src={`${children[idx].main_image}`}
@@ -150,7 +149,6 @@ export default function TabOptions({ selected, setSelected }) {
                 ChildCount += 1;
               }
             } else {
-
               ProductDetails = <span>
                 <Text strong>Price:</Text>
                 <Text type="secondary"> {children[0].price}</Text><br />
@@ -205,7 +203,8 @@ export default function TabOptions({ selected, setSelected }) {
             if (children[0]?.process_tags) {
               console.log(children[0].process_tags);
               var processTag = children[0].process_tags
-              if (children[0].process_tags[0].includes("in progress")) {
+              console.log([processTag])
+              if (children[0].process_tags !== undefined) {
                 parentActivity = <Button
                   icon={ClockMajor}
                   onClick={() => {
@@ -255,7 +254,21 @@ export default function TabOptions({ selected, setSelected }) {
         }}
         scroll={{ x: 900 }}
       />
-      <Heading>Sachin</Heading>
+
+      <Card sectioned>
+        <Pagination
+          label="Results"
+          hasPrevious = {(pagination.prev === null)?false:true}
+          onPrevious={() => {
+            console.log('Previous');
+          }}
+          hasNext ={(pagination.next === null)?false:true}
+          onNext={() => {
+            console.log('Next');
+          }}
+        />
+      </Card>
+
       <ModalInProgress activeProgressModal={activeProgressModal}
         setActiveProgressModal={setActiveProgressModal}
         modalProp={modalProp} selected={selected} setSelected={setSelected} />

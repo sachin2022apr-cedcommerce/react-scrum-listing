@@ -22,4 +22,5 @@ const addUser = (state = inititalState, action) => {
             return state
     }
 }
+
 export default addUser;

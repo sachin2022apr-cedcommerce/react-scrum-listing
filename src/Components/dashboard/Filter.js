@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { SearchMinor } from '@shopify/polaris-icons';
-import { ChoiceList, TextField, RangeSlider, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover, Image, Text } from '@shopify/polaris';
+import { ChoiceList, TextField, RangeSlider, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover, Image, Text, Heading, Stack, Card } from '@shopify/polaris';
 import { useState, useCallback } from 'react';
 import useFetch from '../../customHook/useFetch';
 import Element from 'antd/lib/skeleton/Element';
-import { Card } from 'antd';
+// import { Card } from 'antd';
 
 export default function Filter() {
     const {getListingData} = useFetch()
@@ -141,41 +141,55 @@ export default function Filter() {
     }
 
     const [selectedOptions, setSelectedOptions] = useState([]);
-    const [inputValue, setInputValue] = useState('');
-    const [options, setOptions] = useState([]);
+    const [inputValue, setInputValue] = useState("");
+    const [options, setOptions] = useState([[{value:"",label:<Heading>No Result Found</Heading>}]]);
 
     const updateText = useCallback(
         (value) => {
             setInputValue(value);
-            var _searchResult = [];
-            getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getSearchSuggestions?query=${value}`).then((result) => {
-                result.data.forEach((item, index) => {
-                    // console.log(item.product_type,item.brand, item.title);
-                    _searchResult.push({
-                        title:value,
-                        value:item.container_id,
-                        label:(<Columns  
-                        columns={{xs: '1fr 4fr'}}>
-                            <Image width={100} src = {item.main_image} />
-                            <Card title={item.title}>
-                                <Text><b>Brand: </b> {item.brand}</Text>
-                                <Text><b>Brand: </b> {item.product_type}</Text>
-                            </Card>
-                        </Columns>)
-                    })
-                })
-                setOptions([..._searchResult])
-            })
-            if(value === "")
-            setOptions([])
+           
         },
         [],
     );
+
+    useEffect(() => {
+        var _searchResult = [];
+            getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getSearchSuggestions?query=${inputValue}`).then((result) => {
+                result.data.forEach((item, index) => {
+                    console.log(result.data);
+                    if(item.product_type.toLowerCase().includes(inputValue.toLowerCase()) ||
+                    item.brand.toLowerCase().includes(inputValue.toLowerCase()) || 
+                    item.title.toLowerCase().includes(inputValue.toLowerCase())){
+                        _searchResult.push({
+                            value:item.container_id,
+                            label:(<Columns
+                            columns={{xs: '1fr 10fr'}}>
+                                <Image  width={70} src = {item.main_image}/>
+                                <Card sectioned>
+                                    <Text><b>Title:</b> {item.title}</Text>
+                                    <Text><b>Brand: </b> {item.brand}</Text>
+                                    <Text><b>Product Type: </b> {item.product_type}</Text>
+                                </Card>
+                            </Columns>)
+                        })
+                    }
+                })
+                if(_searchResult.length)
+                    setOptions([..._searchResult])
+                else
+                    setOptions([
+                        {value:"d",
+                        label:<Heading>No Result Found</Heading>}])
+            })
+            if(inputValue === "")
+                setOptions([{value:"d",label:<Heading>No Result Found</Heading>}])
+    },[inputValue])
 
     const updateSelection = useCallback(
         (selected) => {
             const selectedValue = selected.map((selectedItem) => {
                 const matchedOption = options.find((option) => {
+                    console.log(option.value);
                     return option.value.match(selectedItem);
                 });
                 return matchedOption && matchedOption.label;
