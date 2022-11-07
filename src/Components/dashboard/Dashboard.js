@@ -1,4 +1,4 @@
-import { Badge, Card, Columns, Frame, Heading, Page, Select, Tabs, TextStyle, TopBar } from '@shopify/polaris';
+import { Badge, Card, Columns, Frame, Heading, Page, Select, Stack, Tabs, TextStyle, TopBar } from '@shopify/polaris';
 import React, { useCallback, useEffect, useState } from 'react'
 import { ArrowLeftMinor } from '@shopify/polaris-icons';
 import { connect } from 'react-redux';
@@ -10,6 +10,7 @@ import useFetch from '../../customHook/useFetch';
 import Filter from './Filter';
 
 function Dashboard({ userLogout, userData }) {
+    const [selectedOptions, setSelectedOptions] = useState([]);
     var [dataCount, setDataCount] = useState({
         NotListed: 0,
         Inactive: 0,
@@ -106,8 +107,6 @@ function Dashboard({ userLogout, userData }) {
                 if (item._id === 'Incomplete') tempCount.Incomplete = item.total
             })
             setDataCount({ ...tempCount })
-            /*Incomplete,null,Active,Inactive
-            */
         })
     }, [])
     return (
@@ -115,35 +114,43 @@ function Dashboard({ userLogout, userData }) {
             <div className='dashboard' style={{ height: '60px' }}>
                 <Frame topBar={topBarMarkup} />
             </div>
-            <Columns columns={{   xs: '1fr 5fr',
-          md: '1fr 5fr', }}>
-                <Listing />
-                <Frame>
-                    <div className='listingAccount'>
-                        <div>
-                            <Heading>Listings</Heading>
-                            <TextStyle variation="subdued">
-                                You can manage your Shopify products here, which are enabled for Amazon by CedCommerce Sales Channel in your Shopify store.
-                            </TextStyle>
+            <Columns columns={{
+                xs: '1fr 4fr',
+                md: '1fr 4fr',
+            }} spacing={{xs: '5'}}>
+                <div style={{ width: "10%" }}>
+                    <Listing />
+                </div>
+                <div style={{ width: "88%" }}>
+                    <Frame>
+                        <div className='listingAccount'>
+                            <div>
+                                <Heading>Listings</Heading>
+                                <TextStyle variation="subdued">
+                                    You can manage your Shopify products here, which are enabled for Amazon by CedCommerce Sales Channel in your Shopify store.
+                                </TextStyle>
+                            </div>
+                            <div className='sellerName'>
+                                <Select
+                                    label="Seller Account"
+                                    options={
+                                        [{ label: userDetails?.name }]
+                                    }
+                                />
+                            </div>
                         </div>
-                        <div className='sellerName'>
-                            <Select
-                                label="Seller Account"
-                                options={
-                                    [{ label: userDetails?.name }]
-                                }
-                            />
+                        <div style={{ margin: "30px 0px" }} >
+                            <Card sectioned>
+                                <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted></Tabs>
+                                <Filter selectedOptions={selectedOptions}  setSelectedOptions={setSelectedOptions}/>
+                                <TabOptions selected={selected}
+                                    setSelected={setSelected} 
+                                    selectedOptions={selectedOptions}  setSelectedOptions={setSelectedOptions}
+                                    />
+                            </Card>
                         </div>
-                    </div>
-                    <div style={{ margin: "30px 0px" }} >
-                        <Card sectioned>
-                        <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted></Tabs>
-                        <Filter/>
-                        <TabOptions selected={selected}
-                            setSelected={setSelected} />
-                        </Card>
-                    </div>
-                </Frame>
+                    </Frame>
+                </div>
             </Columns>
         </Frame>
     )
