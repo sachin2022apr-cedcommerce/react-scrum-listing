@@ -219,6 +219,8 @@ export default function TabOptions({ selected, setSelected, selectedOptions, set
         tableData.push({
           key: index,
           image: (<Image width={80} src={`${products[index].main_image}`} alt={products[index].title} />),
+
+          
           title: products[index].title,
           ProductDetails: (<>{ProductDetails}<br />{parentDetails}</>),
           description: [...productClild],
