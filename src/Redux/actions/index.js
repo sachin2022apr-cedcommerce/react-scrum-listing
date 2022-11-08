@@ -12,3 +12,10 @@ export const LogoutUser=()=>{
     }
 }
 
+export const tableFilter = (a) => {
+    return{
+        type:"TABLE_FILTER",
+        payload:a
+    }
+}
+

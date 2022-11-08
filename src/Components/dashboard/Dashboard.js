@@ -1,5 +1,6 @@
-import { Badge, Card, Columns, Frame, Heading, Page, Select, Stack, Tabs, TextStyle, TopBar } from '@shopify/polaris';
 import React, { useCallback, useEffect, useState } from 'react'
+
+import { Badge, Card, Columns, Frame, Heading, Page, Select, Stack, Tabs, TextStyle, TopBar } from '@shopify/polaris';
 import { ArrowLeftMinor } from '@shopify/polaris-icons';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +21,9 @@ function Dashboard({ userLogout, userData }) {
     var { getListingData } = useFetch()
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     var [userDetails, setUserDetails] = useState(JSON.parse(sessionStorage.getItem('UserLogin')))
-    console.log(userDetails);
+
+
+    console.log(userData);
     const toggleIsUserMenuOpen = useCallback(
         () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
         [],
@@ -98,7 +101,6 @@ function Dashboard({ userLogout, userData }) {
     useEffect(() => {
         const url = `https://multi-account.sellernext.com/home/public/connector/product/getStatusWiseCount`
         getListingData(url).then((result) => {
-            console.log(result.data)
             var tempCount = { NotListed: 0, Inactive: 0, Incomplete: 0, Active: 0 }
             result.data.forEach((item, index) => {
                 if (item._id === "Inactive") tempCount.Inactive = item.total
@@ -121,7 +123,7 @@ function Dashboard({ userLogout, userData }) {
                 <div style={{ width: "10%" }}>
                     <Listing />
                 </div>
-                <div style={{ width: "88%" }}>
+                <div>
                     <Frame>
                         <div className='listingAccount'>
                             <div>
