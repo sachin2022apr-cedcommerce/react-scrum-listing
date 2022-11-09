@@ -121,7 +121,7 @@ function Dashboard({ userLogout, userData }) {
                 <div style={{ width: "10%" }}>
                     <Listing />
                 </div>
-                <div style={{ width: "88%" }}>
+                {/* <div style={{ width: "88%" }}> */}
                     <Frame>
                         <div className='listingAccount'>
                             <div>
@@ -150,7 +150,7 @@ function Dashboard({ userLogout, userData }) {
                             </Card>
                         </div>
                     </Frame>
-                </div>
+                {/* </div> */}
             </Columns>
         </Frame>
     )

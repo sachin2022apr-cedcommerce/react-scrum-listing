@@ -3,6 +3,7 @@ import { SearchMinor } from '@shopify/polaris-icons';
 import { TextField, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover, Image, Text, Heading, Stack, Tag } from '@shopify/polaris';
 import { useState, useCallback } from 'react';
 import useFetch from '../../customHook/useFetch';
+import MoreFilter from './MoreFilter';
 
 export default function Filter({selectedOptions, setSelectedOptions}) {
     const [appliedFilters, setAppliedFilters] = useState([
@@ -180,18 +181,10 @@ export default function Filter({selectedOptions, setSelectedOptions}) {
                     onSelect={updateSelection}
                     textField={textField}
                 />
-                <Filters
-                    // queryValue={queryValue}
-                    filters={filters}
-                    // appliedFilters={appliedFilters}
-                    onQueryChange={handleFiltersQueryChange}
-                    onQueryClear={handleQueryValueRemove}
-                    onClearAll={handleFiltersClearAll}
-                    hideQueryField
-                />
+                 <MoreFilter appliedFilters={appliedFilters} setAppliedFilters={setAppliedFilters} />
                 <Button>Sync Status</Button>
                 <Button>Amazon Lookup</Button>
-                <Popover
+                <Popover 
                     active={popoverActive}
                     activator={activator}
                     autofocusTarget="first-node"
