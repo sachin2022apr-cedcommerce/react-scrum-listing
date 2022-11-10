@@ -1,0 +1,24 @@
+const updateSelection = useCallback(
+        (selected) => {
+            // console.log("selected", selected)
+            const selectedValue = selected.map((selectedItem) => {
+                const matchedOption = options.find((option) => {
+                    // console.log(option);
+                    return option.value.title.match(selectedItem.title);
+                });
+                return matchedOption;
+            });
+            setSelectedOptions(selectedValue);
+            console.log(selectedValue);
+            // console.log(selectedValue[0]);
+            var temp = appliedFilters;
+            temp[0] = {
+                key: "input",
+                label: "Title Contains " + selectedValue[0].value.title,
+                onRemove: removeTag("input"),
+            }
+            setAppliedFilters([...temp])
+            setInputValue("")
+        },
+        [options],
+    )

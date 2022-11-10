@@ -50,13 +50,14 @@ export default function useFetch() {
     }
 
     async function getListingData(url, method = 'GET') {
-        
+
         const result = await fetch(url,
-            {
-            method: method,
-            Payload: Payload,
-            headers: headers,
-            })
+            { method: method, Payload: Payload, headers: headers }
+        )
+        return await result.json()
+    }
+    async function getFilters(url) {
+        const result = await fetch(url, filterObj)
         return await result.json()
     }
 

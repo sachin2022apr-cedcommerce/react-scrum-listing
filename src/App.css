@@ -2,10 +2,10 @@
   text-align: left;
 }
 
-.home{
+.home {
   width: 40%;
   min-height: 100vh;
-  margin:10% auto;
+  margin: 10% auto;
 }
 .dashboard {
   width: 100%;
@@ -20,34 +20,40 @@
 .rightDiv {
   width: 80%;
 }
-.header{
+.header {
   width: 100%;
   margin: 0;
-
 }
 /*  */
-.listingHome{
+.listingHome {
   display: flex;
   justify-content: space-between;
 }
-.leftMenu{
+.leftMenu {
   width: 100px;
 }
-.grid{
+.grid {
   width: 79%;
 }
-.listingAccount{
+.listingAccount {
   display: flex;
   align-items: center;
   gap: 10px;
   justify-content: space-between;
 }
-.sellerName{
+.sellerName {
   width: 20%;
 }
-.errorBadge .Polaris-Badge{
+.errorBadge .Polaris-Badge {
   background-color: #ff5e5e;
 }
-.NotListedBadge .Polaris-Badge{
+.NotListedBadge .Polaris-Badge {
   background-color: #e6fcf2;
+}
+.ant-table-cell {
+  text-align: center;
+}
+
+.Polaris-Stack--spacingTight {
+  margin-top: 10px !important;
 }

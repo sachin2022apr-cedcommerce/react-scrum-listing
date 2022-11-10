@@ -51,6 +51,7 @@ export default function MoreFilter({ appliedFilters, setAppliedFilters }) {
     }
 
     console.log(filterValues);
+    // var filterOptions = (data, index, code) => {
     var filterOptions = (data, index, code) => {
         if (data.title === "Vendor") {
             return <Stack vertical>
@@ -79,11 +80,14 @@ export default function MoreFilter({ appliedFilters, setAppliedFilters }) {
                     type={"value"} />
             </Stack>
         }
-        else return <FilterSelect
+        else 
+        return <>
+        <FilterSelect
             property={code}
             options={data.options}
             type={"value"}
             index={index} />
+        </>
     }
 
     var filterWithOutOptions = (data, index, code) => {
@@ -134,14 +138,14 @@ export default function MoreFilter({ appliedFilters, setAppliedFilters }) {
                 result.data.forEach((item, index) => {
                     if (item.title !== "Title" && item.title !== "Price" && item.title !== "Collections" && item.title !== "Product Status") {
                         var code = item.code;
-
+                        
                         if(code === 'sku')
                             code = "items.sku"
                         else if (code === 'quantity')
                             code = "items.quantity"
-                        
+
                         _drawerFilter.push({
-                            key: item.code,
+                            key: code,
                             label: item.title,
                             filter: ((item['options'] !== undefined) ? filterOptions(item, index, code) : filterWithOutOptions(item, index, code))
                             ,

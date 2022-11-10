@@ -25,7 +25,6 @@ function FilterSelect({ options, tableFilter, state, property, index, type }) {
             { label: "Greater than equal to", value: "8" },
             { label: "Less than equal to", value: "9" },
         ],
-
     }
 
     return (

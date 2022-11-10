@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo } from 'react'
 import { SearchMinor } from '@shopify/polaris-icons';
-import { TextField, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover, Image, Text, Heading, Stack, Tag } from '@shopify/polaris';
+import { TextField, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover, Image, Text, Heading, Stack, Tag, Card } from '@shopify/polaris';
 import { useState, useCallback } from 'react';
 import useFetch from '../../customHook/useFetch';
-import MoreFilter from './MoreFilter';
 
-export default function Filter({selectedOptions, setSelectedOptions}) {
+export default function Filter({ selectedOptions, setSelectedOptions }) {
     const [appliedFilters, setAppliedFilters] = useState([
         {
             key: "input",
@@ -17,9 +16,7 @@ export default function Filter({selectedOptions, setSelectedOptions}) {
         },
     ]);
     const { getListingData } = useFetch()
-    const [moneySpent, setMoneySpent] = useState(null);
-    const [taggedWith, setTaggedWith] = useState(null);
-    const [queryValue, setQueryValue] = useState(null);
+
     const [popoverActive, setPopoverActive] = useState(false);
 
     const [inputValue, setInputValue] = useState("");
@@ -41,55 +38,9 @@ export default function Filter({selectedOptions, setSelectedOptions}) {
             More actions
         </Button>
     );
+    // console.log(appliedFilters);
 
-    
-    const handleTaggedWithChange = (value) => {
-        setTaggedWith(value)
-            var temp = appliedFilters;
-            temp[1] = {
-                key: "tag",
-                label: value,
-                onRemove: removeTag(),
-            }
-            setAppliedFilters([...temp])
-    }
-
-    console.log(appliedFilters);
-    const handleFiltersQueryChange = useCallback(
-        (value) => setQueryValue(value),
-        [],
-    );
-
-    const handleMoneySpentRemove = useCallback(() => setMoneySpent(null), []);
-    const handleTaggedWithRemove = useCallback(() => setTaggedWith(null), []);
-    const handleQueryValueRemove = useCallback(() => setQueryValue(null), []);
-    const handleFiltersClearAll = useCallback(() => {
-        handleMoneySpentRemove();
-        handleTaggedWithRemove();
-        handleQueryValueRemove();
-    }, [
-        handleMoneySpentRemove,
-        handleQueryValueRemove,
-        handleTaggedWithRemove,
-    ]);
-
-    const filters = [
-        {
-            key: 'taggedWith',
-            label: 'Tagged with',
-            filter: (
-                <TextField
-                    label="Tagged with"
-                    value={taggedWith}
-                    onChange={handleTaggedWithChange}
-                    autoComplete="off"
-                    labelHidden
-                />
-            ),
-            shortcut: true,
-        }
-    ];
-    const updateText = useCallback((value) => {setInputValue(value)},[]);
+    const updateText = useCallback((value) => { setInputValue(value) }, []);
 
     useEffect(() => {
         var _searchResult = [];
@@ -137,19 +88,20 @@ export default function Filter({selectedOptions, setSelectedOptions}) {
                 return matchedOption;
             });
             setSelectedOptions(selectedValue);
-            console.log(selectedValue[0]);
-                var temp = appliedFilters;
-                temp[0] = {
-                    key: "input",
-                    label: "Title Contains "+selectedValue[0].value.title,
-                    onRemove: removeTag("input"),
-                }
-                setAppliedFilters([...temp])
+            console.log(selectedValue);
+            // console.log(selectedValue[0]);
+            var temp = appliedFilters;
+            temp[0] = {
+                key: "input",
+                label: "Title Contains " + selectedValue[0].value.title,
+                onRemove: removeTag("input"),
+            }
+            setAppliedFilters([...temp])
             setInputValue("")
         },
         [options],
     );
-    console.log(selectedOptions);
+    // console.log(selectedOptions);
     // Math.floor(Date.now() * Math.random())
     const textField = (
         <Autocomplete.TextField
@@ -164,12 +116,11 @@ export default function Filter({selectedOptions, setSelectedOptions}) {
     //     Sachin
     // </Tag>
     var tagMarkup = appliedFilters.map((option) => {
-        if(option.label !== ""){
-        return (<Tag key={option.key} onRemove>
-            {option.label}
-        </Tag>)}
-        // <p>{JSON.stringify(option)}</p>
-
+        if (option.label !== "") {
+            return (<Tag key={option.key} onRemove>
+                {option.label}
+            </Tag>)
+        }
     });
     return (
         <div style={{ margin: "20px 0" }}>
@@ -181,7 +132,15 @@ export default function Filter({selectedOptions, setSelectedOptions}) {
                     onSelect={updateSelection}
                     textField={textField}
                 />
-                 <MoreFilter appliedFilters={appliedFilters} setAppliedFilters={setAppliedFilters} />
+                <Filters
+                    // queryValue={queryValue}
+                    filters={filters}
+                    // appliedFilters={appliedFilters}
+                    onQueryChange={handleFiltersQueryChange}
+                    onQueryClear={handleQueryValueRemove}
+                    onClearAll={handleFiltersClearAll}
+                    hideQueryField
+                />
                 <Button>Sync Status</Button>
                 <Button>Amazon Lookup</Button>
                 <Popover 
@@ -196,11 +155,7 @@ export default function Filter({selectedOptions, setSelectedOptions}) {
                     />
                 </Popover>
             </Columns>
-            
-            <Stack spacing="tight">
-                {tagMarkup}
-            </Stack>
+            <Stack spacing="tight">{tagMarkup}</Stack>
         </div>
     );
 }
-
