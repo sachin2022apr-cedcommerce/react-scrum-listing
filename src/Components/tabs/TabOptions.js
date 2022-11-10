@@ -1,6 +1,7 @@
-import { Badge, Button, ButtonGroup, Card, Frame, Heading, Pagination, Stack } from '@shopify/polaris';
-import { Image, Space, Table, Tabs, Typography } from 'antd'
-import React, { useCallback, useEffect, useState } from 'react'
+import { Badge, Button, Heading, Pagination, Stack } from '@shopify/polaris';
+import { Image, Table, Typography } from 'antd'
+import React, { useEffect, useState } from 'react'
+
 import {
   ClockMajor
 } from '@shopify/polaris-icons';
@@ -8,12 +9,8 @@ import ModalInProgress from '../modal/ModalInProgress';
 import useFetch from '../../customHook/useFetch';
 import { connect } from 'react-redux';
 import { tableFilter } from '../../Redux/actions';
-<<<<<<< HEAD
-import ErrorModal from '../modal/ErrorModal';
-=======
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
-const { Text } = Typography;
 
+const { Text } = Typography;
 const tabWiseUrl = [
   "",
   "&filter[cif_amazon_multi_inactive][1]={Not Listed}",
@@ -23,26 +20,9 @@ const tabWiseUrl = [
   "&filter[cif_amazon_multi_activity][1]=error"
 ]
 
-<<<<<<< HEAD
-=======
-
-const childTableColumns = [
-  { title: <Heading>Image</Heading>, dataIndex: 'image' },
-  { title: <Heading>Name</Heading>, dataIndex: 'title' },
-  { title: <Heading>Product Details</Heading>, dataIndex: 'ProductDetails' },
-  { title: <Heading>Inventory</Heading>, dataIndex: 'inventory' },
-  { title: <Heading>Amazon Status</Heading>, dataIndex: 'amazonStatus' },
-  { title: <Heading>Activity</Heading>, dataIndex: 'activity' }
-]
-
-function TabOptions({ selected, setSelected, selectedOptions, setSelectedOptions, state }) {
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
-
 function TabOptions({ state, selected, setSelected, selectedOptions, setSelectedOptions }) {
-  console.log();
   var { getListingData } = useFetch()
   const [activeProgressModal, setActiveProgressModal] = useState(false);
-  const [activeErrorModal, setActiveErrorModal] = useState(false);
   const [modalProp, setModalProp] = useState([])
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState([]);
@@ -52,9 +32,7 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
     prev: null
   })
 
-<<<<<<< HEAD
   var amazonStatusRender = (record) => {
-    console.log(record);
     return (
       <div>
         {record.key === "error" ? (
@@ -63,7 +41,6 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
               {record.key}
             </Badge></span>
             <Button plain>View Error</Button>
-            {/* <ErrorModal status={record} activeErrorModal={activeErrorModal} setActiveErrorModal={setActiveErrorModal} /> */}
           </Stack>
         ) : (
           (record.key.includes('Not Listed') ?
@@ -83,8 +60,6 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
       </div>
     );
   }
-=======
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
 
   const columns = [
     { title: <Text strong>Image</Text>, dataIndex: 'image' },
@@ -93,29 +68,14 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
     { title: <Heading>Template</Heading>, dataIndex: 'template' },
     { title: <Heading>Inventory</Heading>, dataIndex: 'inventory' },
     {
-<<<<<<< HEAD
       title: <Heading>Amazon Status</Heading>, dataIndex: 'amazonStatus',
       render: (record) => {
         return amazonStatusRender(record)
       },
     },
-=======
-      title: <Heading>Amazon Status</Heading>,
-      dataIndex: 'amazonStatus',
-      render: (record) => {
-        return (
-          <>
-            <Heading>{record.name}</Heading>
-          </>
-        )
-      }
-    },
-
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
     {
       title: <Heading>Activity</Heading>, dataIndex: 'activity',
       render: (record) => {
-        // console.log(record);
         if (record.length) {
           return (<Button
             icon={ClockMajor}
@@ -127,16 +87,12 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
         } else
           return (<Text strong>--</Text>)
       }
-<<<<<<< HEAD
 
-=======
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
     },
     { title: <Heading>Action</Heading>, dataIndex: 'action' }
   ];
 
 
-<<<<<<< HEAD
   const childTableColumns = [
     { title: <Heading>Image</Heading>, dataIndex: 'image' },
     { title: <Heading>Name</Heading>, dataIndex: 'title' },
@@ -152,26 +108,12 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
     },
     { title: <Heading>Activity</Heading>, dataIndex: 'activity' }
   ]
-=======
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
 
   const tableColumns = columns.map((item) => ({
     ...item,
   }));
 
-<<<<<<< HEAD
-  var handleProgress = (data) => {
-    setModalProp([...data]);
-    setActiveProgressModal(!activeProgressModal)
-=======
-  const fetchStatus = (data) => {
-    // console.log("status", data)
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
-  }
-
-
   var tableData = (result) => {
-    console.log(result);
     setLoading(false)
     setPagination({
       next: result.data.next,
@@ -188,7 +130,6 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
         var Quantity = 0;
         var ChildCount = 0;
         var ActivityStatus = <Heading alignment="center">--</Heading>
-<<<<<<< HEAD
         var parentActivity = []
         if (
           Object.keys(products[index]).includes("error") ||
@@ -204,12 +145,7 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
         }
 
 
-=======
-        var parentActivity = [];
-        parentAmazonStatus = <span className='NotListedBadge'>
-          <Badge status="new">Not Listed</Badge>
-        </span>
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
+        
         if (products[index].type === "variation") {
 
           for (var idx = 1; idx < children.length; idx++) {
@@ -337,22 +273,18 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
 
 
         if (children[0]?.process_tags) {
-          // console.log(children[0].process_tags);
           var processTag = children[0].process_tags
-          // console.log([processTag])
           if (children[0].process_tags !== undefined) {
             parentActivity = [...processTag]
           }
         }
 
-        if (children[0]?.process_tags) {
-          // console.log(children[0].process_tags);
-          var processTag = children[0].process_tags
-          // console.log([processTag])
-          if (children[0].process_tags !== undefined) {
-            parentActivity = [...processTag]
-          }
-        }
+        // if (children[0]?.process_tags) {
+        //   var processTag = children[0].process_tags
+        //   if (children[0].process_tags !== undefined) {
+        //     parentActivity = [...processTag]
+        //   }
+        // }
 
         tableData.push({
           key: index,
@@ -363,63 +295,41 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
           template: template,
           inventory: inventoryString,
           amazonStatus: parentAmazonStatus,
-          // amazonStatus: { name: "Yash" },
           activity: parentActivity,
-          action: parentAmazonStatus
+          action:  (
+            <Button> :
+            </Button>
+          ),
         })
       }
     }
     setData([...tableData]);
   }
-  console.log(state.dataTable);
   useEffect(() => {
-
     var Appliedfilter = JSON.parse(sessionStorage.getItem("fiterData"))
     var filterString = "";
-
     Appliedfilter?.forEach((item, index) => {
-
       if (item?.condition !== undefined && item.value !== undefined) {
         filterString += `&filter[${item.property}][${item.condition}]=${item.value}`
       }
-
     });
 
     var search;
-<<<<<<< HEAD
-    console.log(selectedOptions);
     if (selectedOptions.length)
       search = `&filter[container_id][1]=${selectedOptions[0].value.id}`
     else search = ""
-    console.log(search);
-    console.log(Appliedfilter);
-=======
-    // console.log(selectedOptions);
-    var Appliedfilter = JSON.parse(sessionStorage.getItem("fiterData"))
-    console.log(Appliedfilter);
-
-    var filterString = "";
-    Appliedfilter?.forEach((item, index) => {
-
-      if (item?.condition !== undefined && item.value !== undefined) {
-        filterString += `&filter[${item.property}][${item.condition}]=${item.value}`
-      }
-
-    });
-    console.log(filterString);
 
     if (selectedOptions.length)
       search = `&filter[container_id][1]=${selectedOptions[0].value.id}`
     else search = ""
-    // console.log(search);
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
+
     setLoading(true)
     getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getRefineProducts?${search}${tabWiseUrl[selected]}${filterString}&count=50`)
       .then((result) => {
         tableData(result)
       })
   }, [selected, selectedOptions, state.dataTable])
-  // console.log(data);
+
   var getPaginationData = (paginationValue) => {
     var url = ""
     if (paginationValue === "next")
@@ -429,7 +339,6 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
     setLoading(true)
     getListingData(url)
       .then((result) => {
-        // console.log(result);
         tableData(result)
       })
   }
@@ -455,15 +364,8 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
         scroll={{ x: 900 }}
       />
       <Stack distribution="center">
-<<<<<<< HEAD
-      {/* /7 page(s) */}
-        <Pagination
-          // label={pageCount}
-          label={(<><Button disabled>{pageCount}</Button> </>)}
-=======
         <Pagination
           label={(<><Button disabled>{pageCount}</Button> /7 page(s)</>)}
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
           hasPrevious={(pagination.prev === null) ? false : true}
           onPrevious={() => {
             getPaginationData("prev")
@@ -481,6 +383,7 @@ function TabOptions({ state, selected, setSelected, selectedOptions, setSelected
         setActiveProgressModal={setActiveProgressModal}
         modalProp={modalProp} selected={selected} setSelected={setSelected} />
     </>
+
   )
 }
 
@@ -494,8 +397,5 @@ const MapDispatchToProps = (dispatch) => {
     tableFilter: (value) => dispatch(tableFilter(value))
   }
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> b0b5b80903d6e7b37f39b3f6589b97dcb039c25a
 export default connect(MapStateToProps, MapDispatchToProps)(TabOptions)

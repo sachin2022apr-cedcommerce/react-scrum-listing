@@ -1,18 +1,8 @@
 import React from 'react'
 import { Frame, Navigation } from '@shopify/polaris'
-import {
-    HomeMinor,
-    OrdersMinor,
-    ProductsMinor,
-    CirclePlusOutlineMinor,
-    CustomersMinor,
-    AnalyticsMinor,
-    MarketingMajor,
-    DiscountsMinor,
-    AppsMinor,
-    OnlineStoreMajor,
-    QuickSaleMajor
-} from '@shopify/polaris-icons';
+import { HomeMinor, OrdersMinor, ProductsMinor, CirclePlusOutlineMinor,
+    CustomersMinor, AnalyticsMinor, MarketingMajor, DiscountsMinor,
+    AppsMinor, OnlineStoreMajor, QuickSaleMajor } from '@shopify/polaris-icons';
 function Listing() {
     return (
         <Frame>

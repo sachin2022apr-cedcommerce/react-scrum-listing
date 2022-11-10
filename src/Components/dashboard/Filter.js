@@ -1,33 +1,24 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { SearchMinor } from '@shopify/polaris-icons';
-import { TextField, Filters, Columns, Button, Autocomplete, Icon, ActionList, Popover, Image, Text, Heading, Stack, Tag, Card } from '@shopify/polaris';
+import { Button, Autocomplete, Icon, ActionList, Popover, Image, Text, Heading, Stack, Tag } from '@shopify/polaris';
 import { useState, useCallback } from 'react';
 import useFetch from '../../customHook/useFetch';
 import MoreFilter from './MoreFilter';
+import SyncStatus from '../filterComponents/SyncStatus';
+import AmazonLookup from '../filterComponents/AmazonLookup';
 
 export default function Filter({ selectedOptions, setSelectedOptions }) {
     const [appliedFilters, setAppliedFilters] = useState([
-        {
-            key: "input",
-            label: "",
-        },
-        {
-            key: "tag",
-            label: "",
-        },
+        { key: "input", label: "" },
+        { key: "tag", label: "" },
     ]);
+
     const { getListingData } = useFetch()
-
+    
     const [popoverActive, setPopoverActive] = useState(false);
-
     const [inputValue, setInputValue] = useState("");
-    const [options, setOptions] = useState([[{ value: "", label: <Heading>No Result Found</Heading> }]]);
 
-    var removeTag = (removeKey) => {
-        // // setAppliedFilters((previousTags) =>
-        // //     previousTags.filter((previousTag) => previousTag.key !== removeKey))
-        // console.log(removeKey);
-    }
+    const [options, setOptions] = useState([[{ value: "", label: <Heading>No Result Found</Heading> }]]);
 
     const togglePopoverActive = useCallback(
         () => setPopoverActive((popoverActive) => !popoverActive),
@@ -36,18 +27,17 @@ export default function Filter({ selectedOptions, setSelectedOptions }) {
 
     const activator = (
         <Button onClick={togglePopoverActive} disclosure>
-            More actions
+           Bulk Update
         </Button>
     );
-    // console.log(appliedFilters);
 
     const updateText = useCallback((value) => { setInputValue(value) }, []);
 
     useEffect(() => {
         var _searchResult = [];
-        getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getSearchSuggestions?query=${inputValue}`).then((result) => {
+        getListingData(`https://multi-account.sellernext.com/home/public/connector/product/getSearchSuggestions?query=${inputValue}`)
+        .then((result) => {
             result.data.forEach((item, index) => {
-                // console.log(result.data);
                 if (item.product_type.toLowerCase().includes(inputValue.toLowerCase()) ||
                     item.brand.toLowerCase().includes(inputValue.toLowerCase()) ||
                     item.title.toLowerCase().includes(inputValue.toLowerCase())) {
@@ -80,30 +70,23 @@ export default function Filter({ selectedOptions, setSelectedOptions }) {
 
     const updateSelection = useCallback(
         (selected) => {
-            // console.log("selected", selected)
             const selectedValue = selected.map((selectedItem) => {
                 const matchedOption = options.find((option) => {
-                    // console.log(option);
                     return option.value.title.match(selectedItem.title);
                 });
                 return matchedOption;
             });
             setSelectedOptions(selectedValue);
-            console.log(selectedValue);
-            // console.log(selectedValue[0]);
             var temp = appliedFilters;
             temp[0] = {
                 key: "input",
                 label: "Title Contains " + selectedValue[0].value.title,
-                onRemove: removeTag("input"),
             }
             setAppliedFilters([...temp])
             setInputValue("")
         },
         [options],
     );
-    // console.log(selectedOptions);
-    // Math.floor(Date.now() * Math.random())
     const textField = (
         <Autocomplete.TextField
             onChange={updateText}
@@ -113,10 +96,8 @@ export default function Filter({ selectedOptions, setSelectedOptions }) {
         />
     );
 
-    //     var tagMarkup = <Tag key={111} onRemove={console.log("xx")}>
-    //     Sachin
-    // </Tag>
-    var tagMarkup = appliedFilters.map((option) => {
+    
+    var tagMarkup = appliedFilters.forEach((option) => {
         if (option.label !== "") {
             return (<Tag key={option.key} onRemove>
                 {option.label}
@@ -125,8 +106,7 @@ export default function Filter({ selectedOptions, setSelectedOptions }) {
     });
     return (
         <div style={{ margin: "20px 0" }}>
-            <Columns columns={{ md: '2.5fr 0.5fr 1fr 1fr 1fr' }}>
-
+            <Stack>
                 <Autocomplete
                     options={options}
                     selected={selectedOptions}
@@ -134,9 +114,9 @@ export default function Filter({ selectedOptions, setSelectedOptions }) {
                     textField={textField}
                 />
                  <MoreFilter appliedFilters={appliedFilters} setAppliedFilters={setAppliedFilters} />
-                <MoreFilter appliedFilters={appliedFilters} setAppliedFilters={setAppliedFilters} />
-                <Button>Sync Status</Button>
-                <Button>Amazon Lookup</Button>
+                
+                <SyncStatus/>
+                <AmazonLookup/>
                 <Popover 
                     active={popoverActive}
                     activator={activator}
@@ -148,7 +128,7 @@ export default function Filter({ selectedOptions, setSelectedOptions }) {
                         items={[{ content: 'Import' }, { content: 'Export' }]}
                     />
                 </Popover>
-            </Columns>
+            </Stack>
             <Stack spacing="tight">{tagMarkup}</Stack>
         </div>
     );

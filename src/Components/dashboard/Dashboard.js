@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { Badge, Card, Columns, Frame, Heading, Page, Select, Stack, Tabs, TextStyle, TopBar } from '@shopify/polaris';
+import { Badge, Card, Columns, Frame, Heading, Page, Select, Tabs, TextStyle, TopBar } from '@shopify/polaris';
 import { ArrowLeftMinor } from '@shopify/polaris-icons';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import Listing from './Listing';
 import TabOptions from '../tabs/TabOptions';
 import useFetch from '../../customHook/useFetch';
 import Filter from './Filter';
+import BannerLink from './Banner';
 
 function Dashboard({ userLogout, userData }) {
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -21,9 +22,6 @@ function Dashboard({ userLogout, userData }) {
     var { getListingData } = useFetch()
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     var [userDetails, setUserDetails] = useState(JSON.parse(sessionStorage.getItem('UserLogin')))
-
-
-    console.log(userData);
     const toggleIsUserMenuOpen = useCallback(
         () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
         [],
@@ -55,15 +53,11 @@ function Dashboard({ userLogout, userData }) {
         />
     );
     const topBarMarkup = (<TopBar userMenu={userMenuMarkup} />);
-
-
     const [selected, setSelected] = useState(0);
-
     const handleTabChange = useCallback(
         (selectedTabIndex) => setSelected(selectedTabIndex),
         [],
     );
-
     const tabs = [
         { content: (<span>All</span>) },
         {
@@ -119,38 +113,43 @@ function Dashboard({ userLogout, userData }) {
             <Columns columns={{
                 xs: '1fr 4fr',
                 md: '1fr 4fr',
-            }} spacing={{xs: '5'}}>
+            }} spacing={{ xs: '5' }}>
                 <div style={{ width: "10%" }}>
                     <Listing />
                 </div>
-                    <Frame>
-                        <div className='listingAccount'>
-                            <div>
-                                <Heading>Listings</Heading>
-                                <TextStyle variation="subdued">
-                                    You can manage your Shopify products here, which are enabled for Amazon by CedCommerce Sales Channel in your Shopify store.
-                                </TextStyle>
-                            </div>
-                            <div className='sellerName'>
-                                <Select
-                                    label="Seller Account"
-                                    options={
-                                        [{ label: userDetails?.name }]
-                                    }
-                                />
-                            </div>
+                <Frame>
+                    <div className='listingAccount'>
+                        <div>
+                            <Heading>Listings</Heading>
+                            <TextStyle variation="subdued">
+                                You can manage your Shopify products here, which are enabled for Amazon by CedCommerce Sales Channel in your Shopify store.
+                            </TextStyle>
                         </div>
-                        <div style={{ margin: "30px 0px" }} >
-                            <Card sectioned>
-                                <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted></Tabs>
-                                <Filter selectedOptions={selectedOptions}  setSelectedOptions={setSelectedOptions}/>
-                                <TabOptions selected={selected}
-                                    setSelected={setSelected} 
-                                    selectedOptions={selectedOptions}  setSelectedOptions={setSelectedOptions}
-                                    />
-                            </Card>
+                        <div className='sellerName'>
+                            <Select
+                                label="Seller Account"
+                                options={
+                                    [{ label: userDetails?.name }]
+                                }
+                            />
                         </div>
-                    </Frame>
+                        
+                    </div>
+                    <Page>
+                    <BannerLink/>
+
+                    </Page>
+                    <div style={{ margin: "30px 0px" }} >
+                        <Card sectioned>
+                            <Tabs tabs={tabs} selected={selected} onSelect={handleTabChange} fitted></Tabs>
+                            <Filter selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions} />
+                            <TabOptions selected={selected}
+                                setSelected={setSelected}
+                                selectedOptions={selectedOptions} setSelectedOptions={setSelectedOptions}
+                            />
+                        </Card>
+                    </div>
+                </Frame>
             </Columns>
         </Frame>
     )
@@ -160,6 +159,7 @@ const MapStateToProps = (state) => {
         userData: state
     }
 }
+
 const MapDispatchToProps = (dispatch) => {
     return {
         userLogout: () => dispatch(LogoutUser())

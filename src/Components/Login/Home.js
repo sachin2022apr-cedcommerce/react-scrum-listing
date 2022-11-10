@@ -39,7 +39,6 @@ function Home({ userLogin }) {
             const fetchResult = getUserLogin(`https://fbapi.sellernext.com/user/login?username=${username}&password=${password}`, fetchOperation)
             
             fetchResult.then((usersData) => {
-                console.log(usersData);
                 // if user token is valid
                 if (usersData.success) {
                     sessionStorage.clear();

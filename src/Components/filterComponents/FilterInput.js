@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { tableFilter } from '../../Redux/actions';
 
 
-function FilterInput({tableFilter, property, type, index}) {
+function FilterInput({state, tableFilter, property, type, index}) {
     return (
         <>
             <TextField 

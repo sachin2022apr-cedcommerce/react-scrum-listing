@@ -1,19 +1,17 @@
 import React from 'react'
-import { Button, Heading, Icon, Modal, Stack, TextContainer } from '@shopify/polaris';
+import { Heading, Icon, Modal, Stack, TextContainer } from '@shopify/polaris';
 import {
     AnalyticsMinor
   } from '@shopify/polaris-icons';
-import { useState, useCallback } from 'react';
+import {  useCallback } from 'react';
 
 export default function ModalInProgress({ activeProgressModal, setActiveProgressModal, modalProp, selected, setSelected  }) {
-    //   const [activeProgressModal, setActiveProgressModal] = useState(false);
 
     const handleChange = useCallback(() => {
         setActiveProgressModal(!activeProgressModal)
         setSelected(selected)
     }, [activeProgressModal]);
 
-    console.log(modalProp);
     return (
         <div>
             <Modal

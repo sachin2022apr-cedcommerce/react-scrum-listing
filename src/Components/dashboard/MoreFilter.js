@@ -1,4 +1,4 @@
-import { Filters, Heading, Select, Stack, TextField } from '@shopify/polaris'
+import { Filters, Stack } from '@shopify/polaris'
 import React, { useCallback, useEffect, useState } from 'react'
 import useFetch from '../../customHook/useFetch';
 import FilterInput from '../filterComponents/FilterInput';
@@ -29,29 +29,11 @@ var selectOptions = {
     ]
 }
 
-export default function MoreFilter({ appliedFilters, setAppliedFilters }) {
-    const [moneySpent, setMoneySpent] = useState(null);
-    const [taggedWith, setTaggedWith] = useState(null);
-    const [queryValue, setQueryValue] = useState(null);
+export default function MoreFilter() {
     const [filterValues, setFilterValues] = useState([])
     const [filters, setFilters] = useState([])
     const { getFilters } = useFetch();
-    const handleMoneySpentRemove = useCallback(() => setMoneySpent(null), []);
 
-    const handleFiltersQueryChange = useCallback(
-        (value) => setQueryValue(value),
-        [],
-    );
-    const handleQueryValueRemove = useCallback(() => setQueryValue(null), []);
-
-    const handleTaggedWithRemove = useCallback(() => setTaggedWith(null), []);
-
-    var removeTag = () => {
-
-    }
-
-    console.log(filterValues);
-    // var filterOptions = (data, index, code) => {
     var filterOptions = (data, index, code) => {
         if (data.title === "Vendor") {
             return <Stack vertical>
@@ -132,7 +114,6 @@ export default function MoreFilter({ appliedFilters, setAppliedFilters }) {
     useEffect(() => {
         getFilters(`https://multi-account.sellernext.com/home/public/connector/source/getFilterAttributes`)
             .then((result) => {
-                console.log(result.data);
                 var _drawerFilter = []
                 var _filterValueObject = filterValues;
                 result.data.forEach((item, index) => {
@@ -162,17 +143,5 @@ export default function MoreFilter({ appliedFilters, setAppliedFilters }) {
                 setFilterValues([..._filterValueObject])
             })
     }, [])
-    return (
-        <>
-            <Filters
-                // queryValue={queryValue}
-                filters={filters}
-                // appliedFilters={appliedFilters}
-                onQueryChange={handleFiltersQueryChange}
-                onQueryClear={handleQueryValueRemove}
-                // onClearAll={handleFiltersClearAll}
-                hideQueryField
-            />
-        </>
-    )
+    return (<Filters filters={filters} hideQueryField /> )
 }
